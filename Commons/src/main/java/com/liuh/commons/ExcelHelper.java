@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈Excel帮助类〉
  *
  * @author zhangjj
@@ -36,49 +36,50 @@ public class ExcelHelper {
 
     /**
      * 读取Excel文件的内容
+     *
      * @param file Excel文件
-     * @param cls 根据Excel数据封装的实体类
+     * @param cls  根据Excel数据封装的实体类
      * @return List
      */
-    public List readExcel(File file, Class cls, int sheetNum){
-        if(!file.getName().endsWith(".xls")){
-            logger.error(String.format("file format faild: %s",file.getName()));
+    public List readExcel(File file, Class cls, int sheetNum) {
+        if (!file.getName().endsWith(".xls")) {
+            logger.error(String.format("file format faild: %s", file.getName()));
             return null;
         }
         List dataList = null;
         InputStream is = null;
-        try{
+        try {
             is = new FileInputStream(file);
             HSSFWorkbook book = new HSSFWorkbook(is);
             HSSFSheet sheet = book.getSheetAt(sheetNum);
             int rowLength = sheet.getLastRowNum();
             dataList = new ArrayList(rowLength);
             Field[] fields = cls.getDeclaredFields();
-            for(int i=1; i<rowLength+1; i++){
+            for (int i = 1; i < rowLength + 1; i++) {
                 HSSFRow row = sheet.getRow(i);
                 Object o = cls.newInstance();
-                for(int j=0; j<fields.length; j++){
-                    Object data = getCellObject(row.getCell(j),fields[j].getType());
+                for (int j = 0; j < fields.length; j++) {
+                    Object data = getCellObject(row.getCell(j), fields[j].getType());
                     fields[j].setAccessible(true);
-                    fields[j].set(o,data);
+                    fields[j].set(o, data);
                 }
                 dataList.add(o);
             }
-        }catch (IOException io){
-            logger.error(String.format("open file faild: %s",io.getMessage()));
+        } catch (IOException io) {
+            logger.error(String.format("open file fail: %s", io.getMessage()));
             io.printStackTrace();
-        }catch (IllegalAccessException ill){
-            logger.error(String.format("cls.newInstance() faild: %s",ill.getMessage()));
+        } catch (IllegalAccessException ill) {
+            logger.error(String.format("cls.newInstance() fail: %s", ill.getMessage()));
             ill.printStackTrace();
-        }catch (InstantiationException instant){
-            logger.error(String.format("cls.newInstance() faild: %s",instant.getMessage()));
+        } catch (InstantiationException instant) {
+            logger.error(String.format("cls.newInstance() fail: %s", instant.getMessage()));
             instant.printStackTrace();
-        }finally {
-            try{
-                if(is != null){
+        } finally {
+            try {
+                if (is != null) {
                     is.close();
                 }
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -87,41 +88,43 @@ public class ExcelHelper {
 
     /**
      * 读取Excel内容默认sheet为0
+     *
      * @param file Excel文件
-     * @param cls 根据Excel数据封装的实体类
+     * @param cls  根据Excel数据封装的实体类
      * @return List
      */
-    public List readExcel(File file, Class cls){
-        return readExcel(file,cls,0);
+    public List readExcel(File file, Class cls) {
+        return readExcel(file, cls, 0);
     }
 
     /**
      * 数据导出到Excel
+     *
      * @param target 导出到的目标文件
-     * @param list 数据
+     * @param list   数据
      * @return boolean
      */
-    public boolean createExcel(File target,List list,String[] titles){
+    public boolean createExcel(File target, List list, String[] titles) {
         OutputStream os = null;
-        try{
+        try {
             os = new FileOutputStream(target);
             HSSFWorkbook book = new HSSFWorkbook();
             HSSFSheet sheet = book.createSheet("sheet1");
             HSSFRow row = sheet.createRow(0);
             HSSFCell cell = null;
-            if(titles != null){
-                for(int i=0; i<titles.length; i++){
+            if (titles != null) {
+                for (int i = 0; i < titles.length; i++) {
                     cell = row.createCell(i);
                     cell.setCellType(HSSFCell.ENCODING_UTF_16);
                     cell.setCellValue(titles[i]);
                 }
             }
-            for(int i=0; i<list.size(); i++){
-                row = sheet.createRow(i+1);
+            for (int i = 0; i < list.size(); i++) {
+                row = sheet.createRow(i + 1);
                 Object obj = list.get(i);
                 Class cls = obj.getClass();
                 Field[] fields = cls.getDeclaredFields();
-                for(int j=0; j<fields.length; j++){
+                for (int j = 0; j < fields.length; j++) {
                     cell = row.createCell(j);
                     cell.setCellType(HSSFCell.ENCODING_UTF_16);
                     fields[j].setAccessible(true);
@@ -131,14 +134,14 @@ public class ExcelHelper {
             book.write(os);
             os.flush();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            try{
-                if(os != null){
+        } finally {
+            try {
+                if (os != null) {
                     os.close();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -147,23 +150,25 @@ public class ExcelHelper {
 
     /**
      * 数据导出到Excel
+     *
      * @param target 导出到的目标文件
-     * @param list 数据
+     * @param list   数据
      * @return boolean
      */
-    public boolean createExcel(File target, List list){
-        return createExcel(target,list,null);
+    public boolean createExcel(File target, List list) {
+        return createExcel(target, list, null);
     }
 
     /**
      * 根据cell类型获取值
+     *
      * @param cell 单元格
      * @return object
      */
-    private Object getCellObject(HSSFCell cell,Class type){
+    private Object getCellObject(HSSFCell cell, Class type) {
         Object obj = null;
-        if(cell!=null){
-            switch (cell.getCellType()){
+        if (cell != null) {
+            switch (cell.getCellType()) {
                 case HSSFCell.CELL_TYPE_NUMERIC:
                     obj = cell.getNumericCellValue();
                     break;
@@ -190,27 +195,28 @@ public class ExcelHelper {
 
     /**
      * 转换从Execl获取值的类型
+     *
      * @param castTo 被转换的值
-     * @param type 封装实体类型判断
+     * @param type   封装实体类型判断
      */
-   private Object castType(Object castTo, Class type){
-       if(type.equals(String.class)){
-           castTo = String.valueOf(castTo);
-       }else if(type.equals(Boolean.class)){
-           castTo = Boolean.valueOf(castTo.toString());
-       }else if(type.getSuperclass().equals(Number.class)){
-           BigDecimal bigDecimal = new BigDecimal(castTo.toString());
-           if(type.equals(Integer.class)){
-               castTo = bigDecimal.intValue();
-           }else if(type.equals(Float.class)){
-               castTo = bigDecimal.floatValue();
-           }else if(type.equals(Double.class)){
-               castTo = bigDecimal.doubleValue();
-           }else if(type.equals(Long.class)) {
-               castTo = bigDecimal.longValue();
-           }
-       }
-       return castTo;
+    private Object castType(Object castTo, Class type) {
+        if (type.equals(String.class)) {
+            castTo = String.valueOf(castTo);
+        } else if (type.equals(Boolean.class)) {
+            castTo = Boolean.valueOf(castTo.toString());
+        } else if (type.getSuperclass().equals(Number.class)) {
+            BigDecimal bigDecimal = new BigDecimal(castTo.toString());
+            if (type.equals(Integer.class)) {
+                castTo = bigDecimal.intValue();
+            } else if (type.equals(Float.class)) {
+                castTo = bigDecimal.floatValue();
+            } else if (type.equals(Double.class)) {
+                castTo = bigDecimal.doubleValue();
+            } else if (type.equals(Long.class)) {
+                castTo = bigDecimal.longValue();
+            }
+        }
+        return castTo;
     }
 
 }

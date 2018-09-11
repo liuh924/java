@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈文件帮助类〉
  *
  * @author zhangjj
@@ -32,26 +32,27 @@ public class FileHelper {
 
     /**
      * 读取文件内容
-     * @param file 被读取的文件
+     *
+     * @param file    被读取的文件
      * @param handler 回调
      */
-    public static void readFile(File file, ObjectHandler handler){
+    public static void readFile(File file, ObjectHandler handler) {
         InputStream is = null;
-        try{
-           is = new FileInputStream(file);
-           BufferedReader br = new BufferedReader(new InputStreamReader(is));
-           String temp;
-           while((temp = br.readLine()) != null){
-               handler.handler(temp);
-           }
-        }catch(IOException e){
-            logger.error(String.format("read file faild: %s,error: %s",file.toString(),e.getMessage()));
+        try {
+            is = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                handler.handler(temp);
+            }
+        } catch (IOException e) {
+            logger.error(String.format("read file fail: %s,error: %s", file.toString(), e.getMessage()));
             e.printStackTrace();
-        }finally {
-            if(is != null){
-                try{
+        } finally {
+            if (is != null) {
+                try {
                     is.close();
-                }catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -60,31 +61,32 @@ public class FileHelper {
 
     /**
      * 复制文件
+     *
      * @param source 源文件
      * @param target 目标文件
      */
-    public static void copyFile(File source, File target){
+    public static void copyFile(File source, File target) {
         OutputStream os = null;
         FileChannel channel = null;
-        try{
+        try {
             channel = new FileInputStream(source).getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(new BigDecimal(source.length()).intValue());
             int size = channel.read(buffer);
             os = new FileOutputStream(target);
             os.write(buffer.array());
-            logger.info(String.format("Copy file success is size: %d",size));
-        }catch(IOException e){
-            logger.error(String.format("Copy file error: %s",e.getMessage()));
+            logger.info(String.format("Copy file success is size: %d", size));
+        } catch (IOException e) {
+            logger.error(String.format("Copy file error: %s", e.getMessage()));
             e.printStackTrace();
-        }finally{
-            try{
-                if(os != null){
+        } finally {
+            try {
+                if (os != null) {
                     os.close();
                 }
-                if(channel != null){
+                if (channel != null) {
                     channel.close();
                 }
-            }catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

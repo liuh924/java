@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈日期帮助类〉
  *
  * @author zhangjj
@@ -32,7 +32,7 @@ public class DateHelper {
     /**
      * yyyy-MM-dd hh:mm:ss
      */
-    public static final String DEFAULT_DATE_FORMART  = "yyyy-MM-dd HH:mm:ss";
+    public static final String DEFAULT_DATE_FORMART = "yyyy-MM-dd HH:mm:ss";
     /**
      * yyyy-MM-dd
      */
@@ -45,12 +45,13 @@ public class DateHelper {
 
     /**
      * 时间格式转换为字符串日期格式
-     * @param date 日期
+     *
+     * @param date   日期
      * @param format 日期格式不填默认为"yyyy-MM-dd hh:mm:ss"
      */
-    public static String dateToString(Date date,String format){
+    public static String dateToString(Date date, String format) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMART);
-        if(!StringHelper.trimIsEmpty(format)){
+        if (!StringHelper.trimIsEmpty(format)) {
             simpleDateFormat.applyPattern(format);
         }
         return simpleDateFormat.format(date);
@@ -58,19 +59,20 @@ public class DateHelper {
 
     /**
      * 字符串日期格式转换为时间
+     *
      * @param dateString 时间字符串
-     * @param format 字符串日期格式
+     * @param format     字符串日期格式
      * @return Date or Null
      */
-    public static Date stringToDate(String dateString,String format){
-        try{
+    public static Date stringToDate(String dateString, String format) {
+        try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMART);
-            if(!StringHelper.trimIsEmpty(format)){
+            if (!StringHelper.trimIsEmpty(format)) {
                 simpleDateFormat.applyPattern(format);
             }
             return simpleDateFormat.parse(dateString);
-        }catch(ParseException e){
-            logger.error(String.format("String format Date error ====> dateString: %s, format: %s",dateString,format));
+        } catch (ParseException e) {
+            logger.error(String.format("String format Date error ====> dateString: %s, format: %s", dateString, format));
             e.printStackTrace();
         }
         return null;
@@ -78,10 +80,11 @@ public class DateHelper {
 
     /**
      * 获取过去多少年份（年龄）
-     * @param  oldDate 以前日期
+     *
+     * @param oldDate 以前日期
      * @return year(int)
      */
-    public static int overYear(Date oldDate){
+    public static int overYear(Date oldDate) {
         Calendar calendar = Calendar.getInstance();
         int nowYear = calendar.get(Calendar.YEAR);
         int nowMonth = calendar.get(Calendar.MONTH);
@@ -90,11 +93,11 @@ public class DateHelper {
         int oldYear = calendar.get(Calendar.YEAR);
         int oldMonth = calendar.get(Calendar.MONTH);
         int oldDay = calendar.get(Calendar.DAY_OF_MONTH);
-        return nowDay-oldDay>=0 && nowMonth - oldMonth>=0? nowYear-oldYear : nowYear-oldYear-1;
+        return nowDay - oldDay >= 0 && nowMonth - oldMonth >= 0 ? nowYear - oldYear : nowYear - oldYear - 1;
     }
 
-    public static int overYear(String oldDate,String format){
-        return overYear(stringToDate(oldDate,format));
+    public static int overYear(String oldDate, String format) {
+        return overYear(stringToDate(oldDate, format));
     }
 
 

@@ -11,7 +11,7 @@
 package com.liuh.commons;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈字符串帮助类〉
  *
  * @author zhangjj
@@ -22,29 +22,32 @@ public class StringHelper {
 
 
     /**
-     *  判断trim过后是否为空字符串和Null值
-     * @param s  被判断的字符串
+     * 判断trim过后是否为空字符串和Null值
+     *
+     * @param s 被判断的字符串
      * @return boolean
      */
-    public static boolean trimIsEmpty(String s){
+    public static boolean trimIsEmpty(String s) {
         return isNull(s) || "".equals(s.trim());
     }
 
     /**
      * 判断是否为字符串和Null值
+     *
      * @param s 被判断的字符串
      * @return boolean
      */
-    public static boolean isEmpty(String s){
+    public static boolean isEmpty(String s) {
         return isNull(s) || "".equals(s);
     }
 
     /**
-     *  判断是否为Null值
+     * 判断是否为Null值
+     *
      * @param s 被判断的字符串
      * @return boolean
      */
-    public static boolean isNull(String s){
+    public static boolean isNull(String s) {
         return null == s;
     }
 
